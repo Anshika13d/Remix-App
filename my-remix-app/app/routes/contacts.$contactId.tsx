@@ -1,19 +1,28 @@
 //whenever we use . in our file name like contacts.2 it means contacts/2 route path
 
-import { Form } from "@remix-run/react";
+import { Form,  useLoaderData} from "@remix-run/react";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import type { FunctionComponent } from "react";
 
 import type { ContactRecord } from "../data";
 
+import { getContact } from "../data";
+import invariant from "tiny-invariant";
+
+export async function loader({params} : LoaderFunctionArgs) {
+  invariant(params.contactId, 'missing contactId param');
+  const contactId = params.contactId;
+  const contact = await getContact(contactId);
+  if(!contact){
+    throw new Response("Not found", { status: 404 });
+  }
+  return json(contact);
+}
+
 export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "http://placekitten.com/200/300",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+  
+
+  const contact = useLoaderData<typeof loader>();
 
   return (
     <div id="contact">
