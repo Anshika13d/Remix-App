@@ -12,7 +12,7 @@ import {
 } from "@remix-run/react";
 
 import appStylesHref from "./app.css"
-import { getContacts } from "./data";
+import { getContacts } from "./data.server";
 import { json } from "@remix-run/node";
 
 export const links: LinksFunction = () => [
